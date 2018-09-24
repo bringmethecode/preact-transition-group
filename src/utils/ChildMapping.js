@@ -1,9 +1,13 @@
-import { Children, cloneElement, isValidElement } from 'react';
+import { cloneElement } from 'preact';
+
+// TODO: Is this necessary?
+const isValidElement = child => typeof child !== 'boolean' && child != null;
 
 /**
  * Given `this.props.children`, return an object mapping key to child.
  *
- * @param {*} children `this.props.children`
+ * @param {Array<import('preact').VNode>} children `this.props.children`
+ * @param {(child: import('preact').VNode) => any} [mapFn]
  * @return {object} Mapping of key to child
  */
 export function getChildMapping(children, mapFn) {
@@ -11,7 +15,7 @@ export function getChildMapping(children, mapFn) {
 
 	let result = Object.create(null);
 	if (children)
-		Children.map(children, c => c).forEach(child => {
+		children.map(c => c).forEach(child => {
 			// run the map function here instead so that the key is the computed one
 			result[child.key] = mapper(child);
 		});
