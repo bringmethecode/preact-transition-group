@@ -1,5 +1,5 @@
 import { h, Component, render, rerender } from 'preact';
-import TransitionGroup from '../src';
+import { TransitionGroup } from '../src';
 import { setupCustomMatchers, setupScratch, teardown } from './utils';
 
 /* global describe,expect,it,spyOn */
@@ -53,7 +53,7 @@ class TodoList extends Component {
 }
 
 
-describe('TransitionGroup', () => {
+xdescribe('TransitionGroup v1', () => {
 
 	/** @type {HTMLDivElement} */
 	let scratch;
