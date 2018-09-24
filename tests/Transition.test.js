@@ -271,12 +271,13 @@ describe('Transition', () => {
 		});
 	});
 
-	/*
 	describe('mountOnEnter', () => {
-		class MountTransition extends React.Component {
+		class MountTransition extends Component {
 			constructor(props) {
 				super(props);
 				this.state = { in: props.initialIn };
+
+				this.getStatus = () => this.transition.state.status;
 			}
 
 			render() {
@@ -285,7 +286,7 @@ describe('Transition', () => {
 
 				return (
 					<Transition
-						ref="transition"
+						ref={c => (this.transition = c)}
 						mountOnEnter
 						in={this.state.in}
 						timeout={10}
@@ -295,8 +296,6 @@ describe('Transition', () => {
 					</Transition>
 				);
 			}
-
-      getStatus = () => this.refs.transition.state.status
 		}
 
 		it('should mount when entering', done => {
@@ -343,11 +342,13 @@ describe('Transition', () => {
 	});
 
 	describe('unmountOnExit', () => {
-		class UnmountTransition extends React.Component {
+		class UnmountTransition extends Component {
 			constructor(props) {
 				super(props);
 
 				this.state = { in: props.initialIn };
+
+				this.getStatus = () => this.transition.state.status;
 			}
 
 			render() {
@@ -356,7 +357,7 @@ describe('Transition', () => {
 
 				return (
 					<Transition
-						ref="transition"
+						ref={c => (this.transition = c)}
 						unmountOnExit
 						in={this.state.in}
 						timeout={10}
@@ -366,8 +367,6 @@ describe('Transition', () => {
 					</Transition>
 				);
 			}
-
-      getStatus = () => this.refs.transition.state.status
 		}
 
 		it('should mount when entering', done => {
@@ -375,16 +374,16 @@ describe('Transition', () => {
 				<UnmountTransition
 					initialIn={false}
 					onEnter={() => {
-						expect(wrapper.getStatus()).toEqual(EXITED);
-						expect(ReactDOM.findDOMNode(wrapper)).toExist();
+						expect(wrapper.instance().getStatus()).toEqual(EXITED);
+						expect(wrapper.getDOMNode()).toExist();
 
 						done();
 					}}
 				/>
-			).instance();
+			);
 
-			expect(wrapper.getStatus()).toEqual(UNMOUNTED);
-			expect(ReactDOM.findDOMNode(wrapper)).toBeNull();
+			expect(wrapper.instance().getStatus()).toEqual(UNMOUNTED);
+			expect(wrapper.getDOMNode()).not.toExist();
 
 			wrapper.setState({ in: true });
 		});
@@ -395,19 +394,18 @@ describe('Transition', () => {
 					initialIn
 					onExited={() => {
 						setTimeout(() => {
-							expect(wrapper.getStatus()).toEqual(UNMOUNTED);
-							expect(ReactDOM.findDOMNode(wrapper)).not.toExist();
+							expect(wrapper.instance().getStatus()).toEqual(UNMOUNTED);
+							expect(wrapper.getDOMNode()).not.toExist();
 							done();
 						});
 					}}
 				/>
-			).instance();
+			);
 
-			expect(wrapper.getStatus()).toEqual(ENTERED);
-			expect(ReactDOM.findDOMNode(wrapper)).toExist();
+			expect(wrapper.instance().getStatus()).toEqual(ENTERED);
+			expect(wrapper.getDOMNode()).toExist();
 
 			wrapper.setState({ in: false });
 		});
 	});
-	*/
 });

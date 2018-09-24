@@ -156,7 +156,7 @@ export function createMount(scratch) {
 			},
 
 			/** Get the mounted component's DOM node */
-			getDomNode() {
+			getDOMNode() {
 				return wrapper.getChildDomNode();
 			},
 
