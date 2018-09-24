@@ -18,6 +18,11 @@ export function teardown(scratch) {
 
 export function setupCustomMatchers() {
 	jasmine.addMatchers({
+		toExist: () => ({
+			compare: actual => ({
+				pass: actual != null
+			})
+		}),
 		toHaveLength: () => ({
 			compare(actualArray, expectedLength) {
 				if (!actualArray || typeof actualArray.length !== 'number') {

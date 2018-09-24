@@ -1,8 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import { mount } from 'enzyme';
+import { h, render } from 'preact';
 import sinon from 'sinon';
+import { setupCustomMatchers, setupScratch, teardown } from './utils';
 
 import Transition, {
 	UNMOUNTED,
@@ -12,31 +10,42 @@ import Transition, {
 	EXITING
 } from '../src/Transition';
 
-jasmine.addMatchers({
-	toExist: () => ({
-		compare: actual => ({
-			pass: actual != null
-		})
-	})
-});
-
 describe('Transition', () => {
+
+	/** @type {HTMLDivElement} */
+	let scratch;
+
+	/** @type {Transition} */
+	let transition;
+
+	beforeEach(() => {
+		setupCustomMatchers();
+		scratch = setupScratch();
+	});
+
+	afterEach(() => {
+		teardown(scratch);
+	});
+
 	it('should not transition on mount', () => {
-		let wrapper = mount(
+		render(
 			<Transition
 				in
 				timeout={0}
 				onEnter={() => {
 					throw new Error('should not Enter');
 				}}
+				ref={c => transition = c}
 			>
 				<div />
-			</Transition>
+			</Transition>,
+			scratch
 		);
 
-		expect(wrapper.state('status')).toEqual(ENTERED);
+		expect(transition.state.status).toEqual(ENTERED);
 	});
 
+	/*
 	it('should transition on mount with `appear`', done => {
 		mount(
 			<Transition
@@ -388,4 +397,5 @@ describe('Transition', () => {
 			wrapper.setState({ in: false });
 		});
 	});
+	*/
 });
