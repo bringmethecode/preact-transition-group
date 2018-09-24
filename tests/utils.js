@@ -117,6 +117,10 @@ class MountWrapper extends Component {
  * @param {HTMLElement} scratch The element to render into
  */
 export function createMount(scratch) {
+	// TODO: Investigate more closely matching enzyme's functionality
+	// of having mount manage scratch internally...
+	// https://git.io/fANvl
+	// Perhaps use a global jasmine beforeEach, afterEach?
 
 	/**
 	 * @param {import('preact').VNode} vnode
@@ -132,7 +136,6 @@ export function createMount(scratch) {
 		/** @type {MountWrapper} */
 		let wrapper;
 
-		// TODO: Hrmmm. Enzyme's mount takes a vnode, but this MountWrapper takes a Component?
 		render(
 			<MountWrapper {...wrapperProps} ref={c => (wrapper = c)} />,
 			scratch

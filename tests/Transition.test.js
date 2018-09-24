@@ -50,9 +50,13 @@ describe('Transition', () => {
 		expect(transition.state.status).toEqual(ENTERED);
 	});
 
-	/*
 	it('should transition on mount with `appear`', done => {
-		mount(
+		// Enzyme's mount always starts from scratch with each call
+		// so mimicing that here by destroying scratch between calls
+		// and recreating the mount function
+		// TODO: Investigate more closely matching enzyme's functionality
+		// of havin mount manage scratch internally...
+		createMount(scratch)(
 			<Transition
 				in
 				timeout={0}
@@ -64,13 +68,15 @@ describe('Transition', () => {
 			</Transition>
 		);
 
-		mount(
+		teardown(scratch);
+		scratch = setupScratch();
+
+		createMount(scratch)(
 			<Transition in appear timeout={0} onEnter={() => done()}>
 				<div />
 			</Transition>
 		);
 	});
-	*/
 
 	it('should pass filtered props to children', () => {
 
