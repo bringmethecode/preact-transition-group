@@ -1,9 +1,5 @@
-import * as PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { polyfill } from 'react-lifecycles-compat';
-
-import { timeoutsShape } from './utils/PropTypes';
 
 export const UNMOUNTED = 'unmounted';
 export const EXITED = 'exited';
@@ -372,147 +368,6 @@ class Transition extends React.Component {
 	}
 }
 
-Transition.propTypes = {
-
-	/**
-	 * A `function` child can be used instead of a React element.
-	 * This function is called with the current transition status
-	 * ('entering', 'entered', 'exiting', 'exited', 'unmounted'), which can be used
-	 * to apply context specific props to a component.
-	 *
-	 * ```jsx
-	 * <Transition timeout={150}>
-	 *   {(status) => (
-	 *     <MyComponent className={`fade fade-${status}`} />
-	 *   )}
-	 * </Transition>
-	 * ```
-	 */
-	children: PropTypes.oneOfType([
-		PropTypes.func.isRequired,
-		PropTypes.element.isRequired
-	]).isRequired,
-
-	/**
-	 * Show the component; triggers the enter or exit states
-	 */
-	in: PropTypes.bool,
-
-	/**
-	 * By default the child component is mounted immediately along with
-	 * the parent `Transition` component. If you want to "lazy mount" the component on the
-	 * first `in={true}` you can set `mountOnEnter`. After the first enter transition the component will stay
-	 * mounted, even on "exited", unless you also specify `unmountOnExit`.
-	 */
-	mountOnEnter: PropTypes.bool,
-
-	/**
-	 * By default the child component stays mounted after it reaches the `'exited'` state.
-	 * Set `unmountOnExit` if you'd prefer to unmount the component after it finishes exiting.
-	 */
-	unmountOnExit: PropTypes.bool,
-
-	/**
-	 * Normally a component is not transitioned if it is shown when the `<Transition>` component mounts.
-	 * If you want to transition on the first mount set `appear` to `true`, and the
-	 * component will transition in as soon as the `<Transition>` mounts.
-	 *
-	 * > Note: there are no specific "appear" states. `appear` only adds an additional `enter` transition.
-	 */
-	appear: PropTypes.bool,
-
-	/**
-	 * Enable or disable enter transitions.
-	 */
-	enter: PropTypes.bool,
-
-	/**
-	 * Enable or disable exit transitions.
-	 */
-	exit: PropTypes.bool,
-
-	/**
-	 * The duration of the transition, in milliseconds.
-	 * Required unless `addEndListener` is provided
-	 *
-	 * You may specify a single timeout for all transitions like: `timeout={500}`,
-	 * or individually like:
-	 *
-	 * ```jsx
-	 * timeout={{
-	 *  enter: 300,
-	 *  exit: 500,
-	 * }}
-	 * ```
-	 *
-	 * @type {number | { enter?: number, exit?: number }}
-	 */
-	timeout: (props, ...args) => {
-		let pt = timeoutsShape;
-		if (!props.addEndListener) pt = pt.isRequired;
-		return pt(props, ...args);
-	},
-
-	/**
-	 * Add a custom transition end trigger. Called with the transitioning
-	 * DOM node and a `done` callback. Allows for more fine grained transition end
-	 * logic. **Note:** Timeouts are still used as a fallback if provided.
-	 *
-	 * ```jsx
-	 * addEndListener={(node, done) => {
-	 *   // use the css transitionend event to mark the finish of a transition
-	 *   node.addEventListener('transitionend', done, false);
-	 * }}
-	 * ```
-	 */
-	addEndListener: PropTypes.func,
-
-	/**
-	 * Callback fired before the "entering" status is applied. An extra parameter
-	 * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
-	 *
-	 * @type Function(node: HtmlElement, isAppearing: bool) -> void
-	 */
-	onEnter: PropTypes.func,
-
-	/**
-	 * Callback fired after the "entering" status is applied. An extra parameter
-	 * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
-	 *
-	 * @type Function(node: HtmlElement, isAppearing: bool)
-	 */
-	onEntering: PropTypes.func,
-
-	/**
-	 * Callback fired after the "entered" status is applied. An extra parameter
-	 * `isAppearing` is supplied to indicate if the enter stage is occurring on the initial mount
-	 *
-	 * @type Function(node: HtmlElement, isAppearing: bool) -> void
-	 */
-	onEntered: PropTypes.func,
-
-	/**
-	 * Callback fired before the "exiting" status is applied.
-	 *
-	 * @type Function(node: HtmlElement) -> void
-	 */
-	onExit: PropTypes.func,
-
-	/**
-	 * Callback fired after the "exiting" status is applied.
-	 *
-	 * @type Function(node: HtmlElement) -> void
-	 */
-	onExiting: PropTypes.func,
-
-	/**
-	 * Callback fired after the "exited" status is applied.
-	 *
-	 * @type Function(node: HtmlElement) -> void
-	 */
-	onExited: PropTypes.func
-};
-
 // Name the function so it is clearer in the documentation
 function noop() {}
 
@@ -539,4 +394,4 @@ Transition.ENTERING = 2;
 Transition.ENTERED = 3;
 Transition.EXITING = 4;
 
-export default polyfill(Transition);
+export default Transition;

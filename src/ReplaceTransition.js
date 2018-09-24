@@ -1,19 +1,6 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import TransitionGroup from './TransitionGroup';
-
-const propTypes = {
-	in: PropTypes.bool.isRequired,
-	children(props, propName) {
-		if (React.Children.count(props[propName]) !== 2)
-			return new Error(
-				`"${propName}" must be exactly two transition components.`
-			);
-
-		return null;
-	}
-};
 
 /**
  * The `<ReplaceTransition>` component is a specialized `Transition` component
@@ -73,7 +60,5 @@ class ReplaceTransition extends React.Component {
 		);
 	}
 }
-
-ReplaceTransition.propTypes = propTypes;
 
 export default ReplaceTransition;
