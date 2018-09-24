@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, h } from 'preact';
 
 import {
 	getChildMapping,
@@ -27,11 +27,7 @@ const defaultProps = {
  * component. This means you can mix and match animations across different list
  * items.
  */
-class TransitionGroup extends React.Component {
-	static childContextTypes = {
-		transitionGroup: PropTypes.object.isRequired
-	};
-
+class TransitionGroup extends Component {
 	constructor(props, context) {
 		super(props, context);
 
