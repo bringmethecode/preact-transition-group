@@ -15,9 +15,6 @@ describe('Transition', () => {
 	/** @type {HTMLDivElement} */
 	let scratch;
 
-	/** @type {Transition} */
-	let transition;
-
 	/** @type {ReturnType<typeof import('./utils').createMount>} */
 	let mount;
 
@@ -32,6 +29,10 @@ describe('Transition', () => {
 	});
 
 	it('should not transition on mount', () => {
+
+		/** @type {Transition} */
+		let transition;
+
 		render(
 			<Transition
 				in
