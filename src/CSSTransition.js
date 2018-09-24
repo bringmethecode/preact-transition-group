@@ -1,7 +1,7 @@
 import addOneClass from 'dom-helpers/class/addClass';
 
 import removeOneClass from 'dom-helpers/class/removeClass';
-import React from 'react';
+import { Component, h } from 'preact';
 
 import Transition from './Transition';
 
@@ -23,8 +23,21 @@ const removeClass = (node, classes) =>
  * the `example-enter` CSS class and the `example-enter-active` CSS class
  * added in the next tick. This is a convention based on the `classNames` prop.
  */
-class CSSTransition extends React.Component {
-	onEnter = (node, appearing) => {
+class CSSTransition extends Component {
+	constructor(props, context) {
+		super(props, context);
+
+		// TODO: Consider using property initializer syntax if buble supports it
+		this.onEnter = this.onEnter.bind(this);
+		this.onEntering = this.onEntering.bind(this);
+		this.onEntered = this.onEntered.bind(this);
+		this.onExit = this.onExit.bind(this);
+		this.onExiting = this.onExiting.bind(this);
+		this.onExited = this.onExited.bind(this);
+		this.getClassNames = this.getClassNames.bind(this);
+	}
+
+	onEnter(node, appearing) {
 		const { className } = this.getClassNames(appearing ? 'appear' : 'enter');
 
 		this.removeClasses(node, 'exit');
@@ -33,9 +46,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onEnter) {
 			this.props.onEnter(node);
 		}
-	};
+	}
 
-	onEntering = (node, appearing) => {
+	onEntering(node, appearing) {
 		const { activeClassName } = this.getClassNames(
 			appearing ? 'appear' : 'enter'
 		);
@@ -45,9 +58,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onEntering) {
 			this.props.onEntering(node);
 		}
-	};
+	}
 
-	onEntered = (node, appearing) => {
+	onEntered(node, appearing) {
 		const { doneClassName } = this.getClassNames('enter');
 
 		this.removeClasses(node, appearing ? 'appear' : 'enter');
@@ -56,9 +69,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onEntered) {
 			this.props.onEntered(node);
 		}
-	};
+	}
 
-	onExit = node => {
+	onExit(node) {
 		const { className } = this.getClassNames('exit');
 
 		this.removeClasses(node, 'appear');
@@ -68,9 +81,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onExit) {
 			this.props.onExit(node);
 		}
-	};
+	}
 
-	onExiting = node => {
+	onExiting(node) {
 		const { activeClassName } = this.getClassNames('exit');
 
 		this.reflowAndAddClass(node, activeClassName);
@@ -78,9 +91,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onExiting) {
 			this.props.onExiting(node);
 		}
-	};
+	}
 
-	onExited = node => {
+	onExited(node) {
 		const { doneClassName } = this.getClassNames('exit');
 
 		this.removeClasses(node, 'exit');
@@ -89,9 +102,9 @@ class CSSTransition extends React.Component {
 		if (this.props.onExited) {
 			this.props.onExited(node);
 		}
-	};
+	}
 
-	getClassNames = type => {
+	getClassNames(type) {
 		const { classNames } = this.props;
 
 		let className =
@@ -114,7 +127,7 @@ class CSSTransition extends React.Component {
 			activeClassName,
 			doneClassName
 		};
-	};
+	}
 
 	removeClasses(node, type) {
 		const { className, activeClassName, doneClassName } = this.getClassNames(
