@@ -1,10 +1,7 @@
-let ChildMapping;
+import { h } from 'preact';
+import * as ChildMapping from '../src/utils/ChildMapping';
 
 describe('ChildMapping', () => {
-	beforeEach(() => {
-		ChildMapping = require('../src/utils/ChildMapping');
-	});
-
 	it('should support getChildMapping', () => {
 		let oneone = <div key="oneone" />;
 		let onetwo = <div key="onetwo" />;
@@ -12,10 +9,10 @@ describe('ChildMapping', () => {
 		let two = <div key="two">foo</div>;
 		let component = <div>{one}{two}</div>;
 
-		let mapping = ChildMapping.getChildMapping(component.props.children);
+		let mapping = ChildMapping.getChildMapping(component.children);
 
-		expect(mapping['.$one'].props).toEqual(one.props);
-		expect(mapping['.$two'].props).toEqual(two.props);
+		expect(mapping.one.attributes).toEqual(one.attributes);
+		expect(mapping.two.attributes).toEqual(two.attributes);
 	});
 
 	it('should support mergeChildMappings for adding keys', () => {
