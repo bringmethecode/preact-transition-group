@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { Component, h, cloneElement } from 'preact';
 
 export const UNMOUNTED = 'unmounted';
 export const EXITED = 'exited';
@@ -102,14 +101,7 @@ export const EXITING = 'exiting';
  * > for more info). Take this into account when choosing between `Transition` and
  * > `CSSTransition`.
  */
-class Transition extends React.Component {
-	static contextTypes = {
-		transitionGroup: PropTypes.object
-	};
-	static childContextTypes = {
-		transitionGroup: () => {}
-	};
-
+class Transition extends Component {
 	constructor(props, context) {
 		super(props, context);
 
@@ -217,7 +209,7 @@ class Transition extends React.Component {
 		if (nextStatus !== null) {
 			// nextStatus will always be ENTERING or EXITING.
 			this.cancelNextCallback();
-			const node = ReactDOM.findDOMNode(this);
+			const node = this.base;
 
 			if (nextStatus === ENTERING) {
 				this.performEnter(node, mounting);
@@ -343,6 +335,8 @@ class Transition extends React.Component {
 		}
 
 		const { children, ...childProps } = this.props;
+
+		// TODO: Use destructuring to filter props
 		// filter props for Transtition
 		delete childProps.in;
 		delete childProps.mountOnEnter;
@@ -363,8 +357,8 @@ class Transition extends React.Component {
 			return children(status, childProps);
 		}
 
-		const child = React.Children.only(children);
-		return React.cloneElement(child, childProps);
+		const child = children[0];
+		return cloneElement(child, childProps);
 	}
 }
 
