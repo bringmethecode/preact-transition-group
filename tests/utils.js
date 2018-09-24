@@ -1,3 +1,5 @@
+import { h, Component, render } from 'preact';
+
 /**
  * Setup the test environment
  * @returns {HTMLDivElement}
@@ -46,4 +48,124 @@ export function setupCustomMatchers() {
 			}
 		})
 	});
+}
+
+class MountWrapper extends Component {
+	constructor(...args) {
+		super(...args);
+		const { props, context } = this.props;
+		this.state = {
+			mount: true,
+			props,
+			context
+		};
+	}
+
+	/**
+	 * @returns {import('preact').Component}
+	 */
+	getInstance() {
+		return this._instance;
+	}
+
+	getChildProps() {
+		return this.getInstance().props;
+	}
+
+	getChildState() {
+		return this.getInstance().state;
+	}
+
+	getChildContext() {
+		return this.state.context;
+	}
+
+	getChildDomNode() {
+		return this.getInstance().base;
+	}
+
+	setInstance(c) {
+		this._instance = c;
+	}
+
+	setChildProps(newProps, callback = undefined) {
+		const { props: oldProps } = this.state;
+		const props = { ...oldProps, ...newProps };
+		this.setState({ props }, callback);
+	}
+
+	setChildState(newState, callback) {
+		this.getInstance().setState(newState, callback);
+	}
+
+	setChildContext(newContext, callback) {
+		const { context: oldContext } = this.state;
+		const context = { ...oldContext, ...newContext };
+		this.setState({ context }, callback);
+	}
+
+	render() {
+		const { Component } = this.props;
+		const { mount, props } = this.state;
+		if (!mount) return null;
+		return <Component ref={c => this.setInstance(c)} {...props} />;
+	}
+}
+
+/**
+ * Create a `mount` function that mimics Enzyme's API
+ * @param {HTMLElement} scratch The element to render into
+ */
+export function createMount(scratch) {
+
+	/**
+	 * @param {import('preact').VNode} vnode
+	 * @param {*} [context]
+	 */
+	function mount(vnode, context) {
+		const wrapperProps = {
+			Component: vnode.nodeName,
+			props: { ...vnode.attributes, children: vnode.children },
+			context
+		};
+
+		/** @type {MountWrapper} */
+		let wrapper;
+
+		// TODO: Hrmmm. Enzyme's mount takes a vnode, but this MountWrapper takes a Component?
+		render(
+			<MountWrapper {...wrapperProps} ref={c => (wrapper = c)} />,
+			scratch
+		);
+
+		return {
+
+			/** Get the mounted component's state */
+			state(field) {
+				return field ? wrapper.getChildState()[field] : wrapper.getChildState();
+			},
+
+			/** Set the mounted component's props */
+			setProps(newProps, callback) {
+				return wrapper.setChildProps(newProps, callback);
+			},
+
+			/** Get the mounted component's instance */
+			instance() {
+				return wrapper.getInstance();
+			},
+
+			/** Get the mounted component's DOM node */
+			getDomNode() {
+				return wrapper.getChildDomNode();
+			},
+
+			/** Set the mounted component's state */
+			setState(newState, callback) {
+				return wrapper.setChildState(newState, callback);
+			}
+		};
+	}
+
+	return mount;
 }
