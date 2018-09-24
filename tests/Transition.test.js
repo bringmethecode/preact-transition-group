@@ -1,4 +1,4 @@
-import { h, render } from 'preact';
+import { h, render, Component } from 'preact';
 import sinon from 'sinon';
 import { setupCustomMatchers, setupScratch, teardown } from './utils';
 
@@ -65,14 +65,20 @@ describe('Transition', () => {
 			</Transition>
 		);
 	});
+	*/
 
 	it('should pass filtered props to children', () => {
-		class Child extends React.Component {
+
+		/** @type {Child} */
+		let child;
+
+		class Child extends Component {
 			render() {
 				return <div>child</div>;
 			}
 		}
-		const child = mount(
+
+		render(
 			<Transition
 				foo="foo"
 				bar="bar"
@@ -91,13 +97,15 @@ describe('Transition', () => {
 				onExiting={() => {}}
 				onExited={() => {}}
 			>
-				<Child />
-			</Transition>
-		).find(Child);
+				<Child ref={c => child = c} />
+			</Transition>,
+			scratch
+		);
 
-		expect(child.props()).toEqual({ foo: 'foo', bar: 'bar' });
+		expect(child.props).toEqual({ foo: 'foo', bar: 'bar', children: [] });
 	});
 
+	/*
 	it('should allow addEndListener instead of timeouts', done => {
 		let listener = sinon.spy((node, end) => setTimeout(end, 0));
 
