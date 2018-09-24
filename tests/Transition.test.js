@@ -272,6 +272,9 @@ describe('Transition', () => {
 		});
 	});
 
+	// NOTE:  Preact mounts an empty text node for null renders so instead
+	// of checking for the existance of a DOM node, validate expected innerHTML
+
 	describe('mountOnEnter', () => {
 		class MountTransition extends Component {
 			constructor(props) {
@@ -305,7 +308,10 @@ describe('Transition', () => {
 					initialIn={false}
 					onEnter={() => {
 						expect(wrapper.instance().getStatus()).toEqual(EXITED);
-						expect(wrapper.getDOMNode()).toExist();
+
+						// expect(wrapper.getDOMNode()).toExist();
+						expect(scratch.innerHTML).toBe('<div></div>');
+
 						done();
 					}}
 				/>
@@ -313,7 +319,8 @@ describe('Transition', () => {
 
 			expect(wrapper.instance().getStatus()).toEqual(UNMOUNTED);
 
-			expect(wrapper.getDOMNode()).not.toExist();
+			// expect(wrapper.getDOMNode()).not.toExist();
+			expect(scratch.innerHTML).toBe('');
 
 			wrapper.setProps({ in: true });
 		});
@@ -324,20 +331,26 @@ describe('Transition', () => {
 					initialIn={false}
 					onEntered={() => {
 						expect(wrapper.instance().getStatus()).toEqual(ENTERED);
-						expect(wrapper.getDOMNode()).toExist();
+
+						// expect(wrapper.getDOMNode()).not.toExist();
+						expect(scratch.innerHTML).toBe('<div></div>');
 
 						wrapper.setState({ in: false });
 					}}
 					onExited={() => {
 						expect(wrapper.instance().getStatus()).toEqual(EXITED);
-						expect(wrapper.getDOMNode()).toExist();
+
+						// expect(wrapper.getDOMNode()).not.toExist();
+						expect(scratch.innerHTML).toBe('<div></div>');
 
 						done();
 					}}
 				/>
 			);
 
-			expect(wrapper.getDOMNode()).not.toExist();
+			// expect(wrapper.getDOMNode()).not.toExist();
+			expect(scratch.innerHTML).toBe('');
+
 			wrapper.setState({ in: true });
 		});
 	});
@@ -376,7 +389,8 @@ describe('Transition', () => {
 					initialIn={false}
 					onEnter={() => {
 						expect(wrapper.instance().getStatus()).toEqual(EXITED);
-						expect(wrapper.getDOMNode()).toExist();
+						// expect(wrapper.getDOMNode()).toExist();
+						expect(scratch.innerHTML).toBe('<div></div>');
 
 						done();
 					}}
@@ -384,7 +398,8 @@ describe('Transition', () => {
 			);
 
 			expect(wrapper.instance().getStatus()).toEqual(UNMOUNTED);
-			expect(wrapper.getDOMNode()).not.toExist();
+			// expect(wrapper.getDOMNode()).not.toExist();
+			expect(scratch.innerHTML).toBe('');
 
 			wrapper.setState({ in: true });
 		});
@@ -396,7 +411,8 @@ describe('Transition', () => {
 					onExited={() => {
 						setTimeout(() => {
 							expect(wrapper.instance().getStatus()).toEqual(UNMOUNTED);
-							expect(wrapper.getDOMNode()).not.toExist();
+							// expect(wrapper.getDOMNode()).not.toExist();
+							expect(scratch.innerHTML).toBe('');
 							done();
 						});
 					}}
@@ -404,7 +420,8 @@ describe('Transition', () => {
 			);
 
 			expect(wrapper.instance().getStatus()).toEqual(ENTERED);
-			expect(wrapper.getDOMNode()).toExist();
+			// expect(wrapper.getDOMNode()).toExist();
+			expect(scratch.innerHTML).toBe('<div></div>');
 
 			wrapper.setState({ in: false });
 		});
