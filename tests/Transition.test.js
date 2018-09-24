@@ -1,6 +1,6 @@
 import { h, render, Component } from 'preact';
 import sinon from 'sinon';
-import { setupCustomMatchers, setupScratch, teardown } from './utils';
+import { createMount, setupCustomMatchers, setupScratch, teardown } from './utils';
 
 import Transition, {
 	UNMOUNTED,
@@ -18,9 +18,13 @@ describe('Transition', () => {
 	/** @type {Transition} */
 	let transition;
 
+	/** @type {ReturnType<typeof import('./utils').createMount>} */
+	let mount;
+
 	beforeEach(() => {
 		setupCustomMatchers();
 		scratch = setupScratch();
+		mount = createMount(scratch);
 	});
 
 	afterEach(() => {
@@ -105,7 +109,6 @@ describe('Transition', () => {
 		expect(child.props).toEqual({ foo: 'foo', bar: 'bar', children: [] });
 	});
 
-	/*
 	it('should allow addEndListener instead of timeouts', done => {
 		let listener = sinon.spy((node, end) => setTimeout(end, 0));
 
@@ -268,6 +271,7 @@ describe('Transition', () => {
 		});
 	});
 
+	/*
 	describe('mountOnEnter', () => {
 		class MountTransition extends React.Component {
 			constructor(props) {
