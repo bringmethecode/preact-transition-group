@@ -1,6 +1,7 @@
+// TODO: Consider removing dependency on dom-helpers
 import addOneClass from 'dom-helpers/class/addClass';
-
 import removeOneClass from 'dom-helpers/class/removeClass';
+
 import { Component, h } from 'preact';
 
 import Transition from './Transition';

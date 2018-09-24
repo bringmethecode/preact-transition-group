@@ -69,5 +69,7 @@
   "peerDependencies": {
     "preact": ">8.3.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "dom-helpers": "^3.3.1"
+  }
 }
