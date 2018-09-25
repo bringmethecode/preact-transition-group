@@ -1,7 +1,8 @@
-import { cloneElement } from 'preact';
+import { h, cloneElement } from 'preact';
 
-// TODO: Is this necessary?
-const isValidElement = child => typeof child !== 'boolean' && child != null;
+// This is necessary to filter out invalid children from child mappings
+const VNode = h('a', null).constructor;
+const isValidElement = child => child && (child instanceof VNode);
 
 /**
  * Given `this.props.children`, return an object mapping key to child.
@@ -87,7 +88,7 @@ export function mergeChildMappings(prev, next) {
 }
 
 function getProp(child, prop, props) {
-	return props[prop] != null ? props[prop] : child.props[prop];
+	return props[prop] != null ? props[prop] : child.attributes && child.attributes[prop];
 }
 
 export function getInitialChildMapping(props, onExited) {
