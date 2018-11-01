@@ -116,7 +116,7 @@ export function getNextChildMapping(nextProps, prevChildMapping, onExited) {
 		const hasNext = key in nextChildMapping;
 
 		const prevChild = prevChildMapping[key];
-		const isLeaving = isValidElement(prevChild) && !prevChild.props.in;
+		const isLeaving = isValidElement(prevChild) && !prevChild.attributes.in;
 
 		// item is new (entering)
 		if (hasNext && (!hasPrev || isLeaving)) {
