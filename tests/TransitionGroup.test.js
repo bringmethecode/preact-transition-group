@@ -1,6 +1,11 @@
 import { render, h, Component } from 'preact';
 import { Transition, TransitionGroup } from '../src';
-import { setupCustomMatchers, setupScratch, createMount, teardown } from './utils';
+import {
+	setupCustomMatchers,
+	setupScratch,
+	createMount,
+	teardown
+} from './utils';
 
 // Most of the real functionality is covered in other unit tests, this just
 // makes sure we're wired up correctly.
@@ -108,9 +113,10 @@ describe('TransitionGroup', () => {
 		jest.runAllTimers();
 		expect(log).toEqual(['exit', 'exiting', 'exited']);
 	});
+	*/
 
 	it('should not throw when enter callback is called and is now leaving', () => {
-		class Child extends React.Component {
+		class Child extends Component {
 			componentWillReceiveProps() {
 				if (this.callback) {
 					this.callback();
@@ -126,28 +132,29 @@ describe('TransitionGroup', () => {
 			}
 		}
 
-		class Component extends React.Component {
+		class Parent extends Component {
 			render() {
 				return <TransitionGroup>{this.props.children}</TransitionGroup>;
 			}
 		}
 
 		// render the base component
-		ReactDOM.render(<Component />, container);
+		let root = render(<Parent />, container);
 		// now make the child enter
-		ReactDOM.render(
-			<Component>
+		root = render(
+			<Parent>
 				<Child key="child" />
-			</Component>,
-			container
+			</Parent>,
+			container,
+			root
 		);
 		// rendering the child leaving will call 'componentWillProps' which will trigger the
 		// callback. This would throw an error previously.
-		expect(ReactDOM.render.bind(this, <Component />, container)).not.toThrow();
+		expect(() => render(<Parent />, container, root)).not.toThrow();
 	});
 
 	it('should not throw when leave callback is called and is now entering', () => {
-		class Child extends React.Component {
+		class Child extends Component {
 			componentWillReceiveProps() {
 				if (this.callback) {
 					this.callback();
@@ -163,34 +170,34 @@ describe('TransitionGroup', () => {
 			}
 		}
 
-		class Component extends React.Component {
+		class Parent extends Component {
 			render() {
 				return <TransitionGroup>{this.props.children}</TransitionGroup>;
 			}
 		}
 
 		// render the base component
-		ReactDOM.render(<Component />, container);
+		let root = render(<Parent />, container);
 		// now make the child enter
-		ReactDOM.render(
-			<Component>
+		root = render(
+			<Parent>
 				<Child key="child" />
-			</Component>,
-			container
+			</Parent>,
+			container,
+			root
 		);
 		// make the child leave
-		ReactDOM.render(<Component />, container);
+		root = render(<Parent />, container, root);
 		// rendering the child entering again will call 'componentWillProps' which will trigger the
 		// callback. This would throw an error previously.
-		expect(
-			ReactDOM.render.bind(
-				this,
-				<Component>
+		expect(() =>
+			render(
+				<Parent>
 					<Child key="child" />
-				</Component>,
-				container
+				</Parent>,
+				container,
+				root
 			)
 		).not.toThrow();
 	});
-	*/
 });
