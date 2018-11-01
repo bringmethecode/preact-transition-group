@@ -141,7 +141,7 @@ export function createMount(scratch) {
 			scratch
 		);
 
-		return {
+		const preactWrapper = {
 
 			/** Get the mounted component's state */
 			state(field) {
@@ -166,8 +166,15 @@ export function createMount(scratch) {
 			/** Set the mounted component's state */
 			setState(newState, callback) {
 				return wrapper.setChildState(newState, callback);
+			},
+
+			tap(callback) {
+				callback(preactWrapper);
+				return preactWrapper;
 			}
 		};
+
+		return preactWrapper;
 	}
 
 	return mount;
