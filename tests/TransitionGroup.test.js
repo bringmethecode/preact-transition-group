@@ -1,4 +1,4 @@
-import { render, h, Component } from 'preact';
+import { render, h, Component, rerender } from 'preact';
 import { Transition, TransitionGroup } from '../src';
 import {
 	setupCustomMatchers,
@@ -85,35 +85,44 @@ describe('TransitionGroup', () => {
 		render(<TransitionGroup />, container);
 	});
 
-	/*
 	it('should handle transitioning correctly', () => {
-		function Parent({ count = 1 }) {
-			let children = [];
-			for (let i = 0; i < count; i++) children.push(<Child key={i} />);
-			return (
-				<TransitionGroup appear enter exit>
-					{children}
-				</TransitionGroup>
-			);
-		}
+		jasmine.clock().withMock(() => {
+			function Parent({ count = 1 }) {
+				let children = [];
+				for (let i = 0; i < count; i++) children.push(<Child key={i} />);
+				return (
+					<TransitionGroup appear enter exit>
+						{children}
+					</TransitionGroup>
+				);
+			}
 
-		jest.useFakeTimers();
-		ReactDOM.render(<Parent />, container);
+			let root = render(<Parent />, container);
+			rerender(); // Flush appearing setState
+			jasmine.clock().tick(10);
+			rerender(); // Flush appeared setState
 
-		jest.runAllTimers();
-		expect(log).toEqual(['appear', 'appearing', 'appeared']);
+			expect(log).toEqual(['appear', 'appearing', 'appeared']);
 
-		log = [];
-		ReactDOM.render(<Parent count={2} />, container);
-		jest.runAllTimers();
-		expect(log).toEqual(['enter', 'entering', 'entered']);
+			log = [];
 
-		log = [];
-		ReactDOM.render(<Parent count={1} />, container);
-		jest.runAllTimers();
-		expect(log).toEqual(['exit', 'exiting', 'exited']);
+			root = render(<Parent count={2} />, container, root);
+			rerender(); // Flush entering setState
+			jasmine.clock().tick(10);
+			rerender(); // Flush entered setState
+
+			expect(log).toEqual(['enter', 'entering', 'entered']);
+
+			log = [];
+
+			render(<Parent count={1} />, container, root);
+			rerender(); // Flush exiting setState
+			jasmine.clock().tick(10);
+			rerender(); // Flush exited setState
+
+			expect(log).toEqual(['exit', 'exiting', 'exited']);
+		});
 	});
-	*/
 
 	it('should not throw when enter callback is called and is now leaving', () => {
 		class Child extends Component {
