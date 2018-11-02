@@ -7,9 +7,9 @@ import { Component, h } from 'preact';
 import Transition from './Transition';
 
 const addClass = (node, classes) =>
-	node && classes && classes.split(' ').forEach(c => addOneClass(node, c));
+	node && node.setAttribute && classes && classes.split(' ').forEach(c => addOneClass(node, c));
 const removeClass = (node, classes) =>
-	node && classes && classes.split(' ').forEach(c => removeOneClass(node, c));
+	node && node.setAttribute && classes && classes.split(' ').forEach(c => removeOneClass(node, c));
 
 /**
  * A `Transition` component using CSS transitions and animations.
