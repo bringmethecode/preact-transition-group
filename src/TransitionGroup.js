@@ -67,8 +67,8 @@ class TransitionGroup extends Component {
 
 		if (child.key in currentChildMapping) return;
 
-		if (child.props.onExited) {
-			child.props.onExited(node);
+		if (child.attributes.onExited) {
+			child.attributes.onExited(node);
 		}
 
 		this.setState(state => {
