@@ -16,9 +16,11 @@ export function getChildMapping(children, mapFn) {
 
 	let result = Object.create(null);
 	if (children)
-		children.map(c => c).forEach(child => {
-			// run the map function here instead so that the key is the computed one
-			result[child.key] = mapper(child);
+		children.forEach(child => {
+			if (child) {
+				// run the map function here instead so that the key is the computed one
+				result[child.key] = mapper(child);
+			}
 		});
 	return result;
 }
