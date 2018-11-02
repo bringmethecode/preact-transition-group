@@ -1,8 +1,9 @@
-import { render, h, Component, rerender } from 'preact';
+import { render, h, Component } from 'preact';
 import { Transition, TransitionGroup } from '../src';
 import {
 	setupCustomMatchers,
 	setupScratch,
+	setupRerenderAll,
 	createMount,
 	teardown
 } from './utils';
@@ -23,10 +24,14 @@ describe('TransitionGroup', () => {
 	/** @type {ReturnType<typeof import('./utils').createMount>} */
 	let mount;
 
+	/** @type {() => void} */
+	let rerenderAll;
+
 	beforeEach(() => {
 		setupCustomMatchers();
 		container = setupScratch();
 		mount = createMount(container);
+		rerenderAll = setupRerenderAll();
 
 		log = [];
 		let events = {
@@ -98,27 +103,21 @@ describe('TransitionGroup', () => {
 			}
 
 			let root = render(<Parent />, container);
-			rerender(); // Flush appearing setState
-			jasmine.clock().tick(10);
-			rerender(); // Flush appeared setState
+			rerenderAll();
 
 			expect(log).toEqual(['appear', 'appearing', 'appeared']);
 
 			log = [];
 
 			root = render(<Parent count={2} />, container, root);
-			rerender(); // Flush entering setState
-			jasmine.clock().tick(10);
-			rerender(); // Flush entered setState
+			rerenderAll();
 
 			expect(log).toEqual(['enter', 'entering', 'entered']);
 
 			log = [];
 
 			render(<Parent count={1} />, container, root);
-			rerender(); // Flush exiting setState
-			jasmine.clock().tick(10);
-			rerender(); // Flush exited setState
+			rerenderAll();
 
 			expect(log).toEqual(['exit', 'exiting', 'exited']);
 		});

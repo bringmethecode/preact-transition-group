@@ -1,4 +1,4 @@
-import { h, Component, render } from 'preact';
+import { h, Component, render, options } from 'preact';
 
 /**
  * Setup the test environment
@@ -10,12 +10,49 @@ export function setupScratch() {
 	return scratch;
 }
 
+let prevDebounce = null;
+
+export function setupRerenderAll() {
+	prevDebounce = options.debounceRendering;
+
+	let rerenders = [];
+	options.debounceRendering = (rerender) => {
+		rerenders.push(rerender);
+	};
+
+	return () => {
+		let rerender;
+		tryClockTick();
+
+		// Call rerender in a loop to catch rerenders that trigger
+		// more rerenders
+		while (rerender = rerenders.shift()) {
+			rerender();
+			tryClockTick();
+		}
+	};
+}
+
+function tryClockTick(ms = 10) {
+	try {
+		jasmine.clock().tick(ms);
+	}
+	catch (e) {
+		// Jasmine will throw an error if the mock clock
+		// isn't installed. That's okay. Ignore it.
+	}
+}
+
 /**
  * Teardown test environment and reset preact's internal state
  * @param {HTMLDivElement} scratch
  */
 export function teardown(scratch) {
 	scratch.parentNode.removeChild(scratch);
+	if (prevDebounce) {
+		options.debounceRendering = prevDebounce;
+		prevDebounce = null;
+	}
 }
 
 export function setupCustomMatchers() {

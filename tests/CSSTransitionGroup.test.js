@@ -1,8 +1,8 @@
-import { h, Component, render, rerender } from 'preact';
+import { h, Component, render } from 'preact';
 import hasClass from 'dom-helpers/class/hasClass';
 import CSSTransition from '../src/CSSTransition';
 import TransitionGroup from '../src/TransitionGroup';
-import { setupScratch, setupCustomMatchers, teardown } from './utils';
+import { setupScratch, setupCustomMatchers, teardown, setupRerenderAll } from './utils';
 
 /* global spyOn */
 
@@ -10,6 +10,7 @@ import { setupScratch, setupCustomMatchers, teardown } from './utils';
 // makes sure we're wired up correctly.
 describe('CSSTransitionGroup', () => {
 	let container;
+	let rerenderAll;
 
 	function YoloTransition({ id, ...props }) {
 		return (
@@ -23,6 +24,7 @@ describe('CSSTransitionGroup', () => {
 		jasmine.clock().install();
 
 		container = setupScratch();
+		rerenderAll = setupRerenderAll();
 		setupCustomMatchers();
 
 		spyOn(console, 'error');
@@ -40,6 +42,7 @@ describe('CSSTransitionGroup', () => {
 			</TransitionGroup>,
 			container
 		);
+		rerenderAll();
 
 		expect(root.childNodes).toHaveLength(1);
 
@@ -54,10 +57,7 @@ describe('CSSTransitionGroup', () => {
 		expect(root.childNodes[0].id).toBe('two');
 		expect(root.childNodes[1].id).toBe('one');
 
-		rerender(); // exiting
-		jasmine.clock().tick(10);
-		rerender(); // exited
-		rerender(); // unmount
+		rerenderAll();
 
 		// No warnings
 		expect(console.error.calls.count()).toBe(0);
