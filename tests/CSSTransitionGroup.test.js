@@ -1,5 +1,4 @@
-import { h, Component, render } from 'preact';
-import hasClass from 'dom-helpers/class/hasClass';
+import { h, render } from 'preact';
 import CSSTransition from '../src/CSSTransition';
 import TransitionGroup from '../src/TransitionGroup';
 import { setupScratch, setupCustomMatchers, teardown, setupRerenderAll } from './utils';
