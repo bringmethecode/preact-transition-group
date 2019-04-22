@@ -9,6 +9,7 @@
   "umd:main": "dist/preact-transition-group-v2.umd.js",
   "scripts": {
     "prepare": "echo 'prepare'",
+    "postinstall": "echo 'postinstall'",
     "build": "microbundle",
     "test": "run-s lint build test:karma",
     "lint": "eslint src tests",
