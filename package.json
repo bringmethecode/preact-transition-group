@@ -7,10 +7,7 @@
   "module": "dist/preact-transition-group-v2.mjs",
   "main": "dist/preact-transition-group-v2.js",
   "umd:main": "dist/preact-transition-group-v2.umd.js",
-  "files": "dist",
   "scripts": {
-    "prepare": "echo 'prepare'",
-    "postinstall": "echo 'postinstall'",
     "build": "microbundle",
     "test": "run-s lint build test:karma",
     "lint": "eslint src tests",
