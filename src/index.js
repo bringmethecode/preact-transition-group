@@ -1,3 +1,11 @@
-import { TransitionGroup } from './TransitionGroup';
+import CSSTransition from './CSSTransition';
+import ReplaceTransition from './ReplaceTransition';
+import TransitionGroup from './TransitionGroup';
+import Transition from './Transition';
 
-export default TransitionGroup;
+export {
+	Transition,
+	TransitionGroup,
+	ReplaceTransition,
+	CSSTransition
+};
